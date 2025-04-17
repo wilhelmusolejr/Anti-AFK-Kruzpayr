@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import messagebox
 from pynput.keyboard import Controller, Key 
 from pynput.mouse import Controller as MouseController, Button
 import threading
@@ -26,11 +25,11 @@ current_mode = None
 def stop_action():
     global running
     running = False
-    status_label.config(text="...")
+    status_label.config(text="Please select a mode to begin.")
 
 def anti_afk_loop():
   global running
-  status_label.config(text="anti_afk_loop")  
+  status_label.config(text="Running...")  
   
   while running:
       press_key_for_seconds(Key.enter, 1)  
@@ -38,7 +37,7 @@ def anti_afk_loop():
     
 def anti_afk_and_drop():
   global running
-  status_label.config(text="anti_afk_and_drop")  
+  status_label.config(text="Running...")  
   
   while running:
       press_key_for_seconds(Key.enter, 1)
@@ -48,16 +47,14 @@ def anti_afk_and_drop():
     
 def auto_fire():
   global running
-  status_label.config(text="auto_fire")
   
+  shots = 0
   while running:
-    mouse.click(Button.left, 1)
-    time.sleep(1)
-    mouse.click(Button.left, 1)
-    time.sleep(1)
-    mouse.click(Button.left, 1)
-    time.sleep(1)
-    mouse.click(Button.left, 1)
+    for i in range(4):
+        mouse.click(Button.left, 1)
+        status_label.config(text=f"{shots} shots fired!")
+        time.sleep(1)
+        shots += 1
     time.sleep(1)
 
 def on_radio_select():
@@ -75,7 +72,7 @@ def on_radio_select():
   running = True
   
   for i in range(5, 0, -1):
-    status_label.config(text=f"Starts in {i} seconds, move to your game now")
+    status_label.config(text=f"Starts in {i} seconds, move to your game now.")
     app.update()
     time.sleep(1)      
   
@@ -135,7 +132,7 @@ tk.Label(app, text="triggers left mouse clicks for self-boosting or repeated att
 # 
 status_label = tk.Label(
     app,
-    text="...",
+    text="Welcome! Please select a mode to begin.",
     fg="black",
     font=("Arial", 16),
     wraplength=300,
