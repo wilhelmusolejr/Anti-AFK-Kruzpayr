@@ -1,11 +1,11 @@
 import tkinter as tk
 from tkinter import messagebox
-from pynput.keyboard import Controller, Key  # <-- Make sure Key is imported
+from pynput.keyboard import Controller, Key 
 from pynput.mouse import Controller as MouseController, Button
 import threading
 import time
 
-# Mouse Controller
+# Controller
 keyboard = Controller()
 mouse = MouseController()
 
@@ -80,18 +80,19 @@ def on_radio_select():
     time.sleep(1)      
   
   if selected == "no_action":
-        threading.Thread(target=stop_action).start()
+        threading.Thread(target=stop_action, daemon=True).start()
   elif selected == "anti_afk":
-        threading.Thread(target=anti_afk_loop).start()
+        threading.Thread(target=anti_afk_loop, daemon=True).start()
   elif selected == "drop_gun":
-        threading.Thread(target=anti_afk_and_drop).start()
+        threading.Thread(target=anti_afk_and_drop, daemon=True).start()
   elif selected == "auto_fire":
-        threading.Thread(target=auto_fire).start()
+        threading.Thread(target=auto_fire, daemon=True).start()
+        
 
 def on_closing():
     global running
-    running = False  # Stop any background threads
-    app.destroy()    # Close the window
+    running = False  
+    app.destroy()  
 
 # UI Setup
 # UI Setup
@@ -143,11 +144,6 @@ status_label = tk.Label(
 status_label.pack(pady=10)
 
 app.mainloop()
-
-
-
-
-
 app.protocol("WM_DELETE_WINDOW", on_closing)
 
 
