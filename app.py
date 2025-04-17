@@ -21,31 +21,12 @@ def press_key_for_seconds(key, duration):
 # Globals
 # Globals
 running = False
-
-def perform_action():
-    global running
-    running = True
-    selected = mode.get()
-
-    if selected == "no_action":
-        messagebox.showinfo("Mode", "No Action selected. Nothing will happen.")
-    
-    elif selected == "anti_afk":
-        messagebox.showinfo("Mode", "ANTI AFK enabled.\nSimulates small activity.")
-        threading.Thread(target=anti_afk_loop).start()
-
-    elif selected == "drop_gun":
-        messagebox.showinfo("Mode", "ANTI AFK + Drop Gun enabled.\nSimulates activity and drops gun (G key).")
-        threading.Thread(target=anti_afk_and_drop).start()
-
-    elif selected == "auto_fire":
-        messagebox.showinfo("Mode", "Auto Fire started.\nSimulating left clicks.")
-        threading.Thread(target=auto_fire).start()
+current_mode = None 
 
 def stop_action():
     global running
     running = False
-    messagebox.showinfo("Stopped", "All actions stopped.")
+    status_label.config(text="...")
 
 def anti_afk_loop():
   global running
@@ -65,7 +46,6 @@ def anti_afk_and_drop():
       press_key_for_seconds('g', 1)
       time.sleep(9)
     
-
 def auto_fire():
   global running
   status_label.config(text="auto_fire")
@@ -80,15 +60,27 @@ def auto_fire():
     mouse.click(Button.left, 1)
     time.sleep(1)
 
-
 def on_radio_select():
-  global running
+  global running, current_mode
   running = True
   selected = mode.get()
-  status_label.config(text="Starts in 5 seconds, move to your game now")  
+  
+  if selected == current_mode:
+    return  
+  
+  running = False  # Stop any previously running thread
+  time.sleep(0.5)  # Give it a moment to stop cleanly
+
+  current_mode = selected  # Update current mode
+  running = True
+  
+  for i in range(5, 0, -1):
+    status_label.config(text=f"Starts in {i} seconds, move to your game now")
+    app.update()
+    time.sleep(1)      
   
   if selected == "no_action":
-        messagebox.showinfo("Mode", "No Action selected. Nothing will happen.")
+        threading.Thread(target=stop_action).start()
   elif selected == "anti_afk":
         threading.Thread(target=anti_afk_loop).start()
   elif selected == "drop_gun":
@@ -96,11 +88,15 @@ def on_radio_select():
   elif selected == "auto_fire":
         threading.Thread(target=auto_fire).start()
 
-# UI Setup
-# UI Setup
-# UI Setup
-# UI Setup
+def on_closing():
+    global running
+    running = False  # Stop any background threads
+    app.destroy()    # Close the window
 
+# UI Setup
+# UI Setup
+# UI Setup
+# UI Setup
 app = tk.Tk()
 app.title("AFK Tool")
 app.geometry("400x400")
@@ -138,7 +134,7 @@ tk.Label(app, text="triggers left mouse clicks for self-boosting or repeated att
 # 
 status_label = tk.Label(
     app,
-    text="Starts in 5 seconds, move to your game now",
+    text="...",
     fg="black",
     font=("Arial", 16),
     wraplength=300,
@@ -151,6 +147,8 @@ app.mainloop()
 
 
 
+
+app.protocol("WM_DELETE_WINDOW", on_closing)
 
 
 
