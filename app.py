@@ -19,77 +19,78 @@ def press_key_for_seconds(key, duration):
 # Globals
 # Globals
 # Globals
-running = False
+running_event = threading.Event()
 current_mode = None 
 
 def stop_action():
-    global running
-    running = False
     status_label.config(text="Please select a mode to begin.")
 
 def anti_afk_loop():
-  global running
-  status_label.config(text="Running...")  
+    global current_mode
+    status_label.config(text="Running...")  
   
-  while running:
-      press_key_for_seconds(Key.enter, 1)  
-      time.sleep(10)
+    while running_event.is_set() and current_mode == "anti_afk":
+        press_key_for_seconds(Key.enter, 1)  
+        time.sleep(10)
     
 def anti_afk_and_drop():
-  global running
-  status_label.config(text="Running...")  
-  
-  while running:
-      press_key_for_seconds(Key.enter, 1)
-      time.sleep(1)
-      press_key_for_seconds('g', 1)
-      time.sleep(9)
+    global current_mode
+        
+    status_label.config(text="Running...")  
+    
+    while running_event.is_set() and current_mode == "drop_gun":
+        press_key_for_seconds(Key.enter, 1)
+        time.sleep(1)
+        press_key_for_seconds('g', 1)
+        time.sleep(9)
     
 def auto_fire():
-  global running
-  
-  shots = 0
-  while running:
-    for i in range(4):
-        mouse.click(Button.left, 1)
-        status_label.config(text=f"{shots} shots fired!")
+    global current_mode
+    
+    shots = 0
+    while running_event.is_set() and current_mode == "auto_fire":
+        for i in range(4):
+            mouse.click(Button.left, 1)
+            status_label.config(text=f"{shots} shots fired!")
+            time.sleep(1)
+            shots += 1
         time.sleep(1)
-        shots += 1
-    time.sleep(1)
 
 def on_radio_select():
-  global running, current_mode
-  running = True
-  selected = mode.get()
-  
-  if selected == current_mode:
-    return  
-  
-  running = False  # Stop any previously running thread
-  time.sleep(0.5)  # Give it a moment to stop cleanly
+    global current_mode
 
-  current_mode = selected  # Update current mode
-  running = True
-  
-  if(selected != "no_action"):
-    for i in range(5, 0, -1):
-      status_label.config(text=f"Starts in {i} seconds, move to your game now.")
-      app.update()
-      time.sleep(1)      
-  
-  if selected == "no_action":
-        threading.Thread(target=stop_action, daemon=True).start()
-  elif selected == "anti_afk":
+    selected = mode.get()
+    if selected == current_mode:
+        return
+
+    # Stop any currently running thread
+    running_event.clear()
+    time.sleep(0.2)  # give the previous thread time to exit
+
+    current_mode = selected  # set the new mode
+
+    if selected != "no_action":
+        for i in range(5, 0, -1):
+            status_label.config(text=f"Starts in {i} seconds, move to your game now.")
+            app.update()
+            time.sleep(1)
+
+    if selected == "no_action":
+        status_label.config(text="Please select a mode to begin.")
+        return
+
+    # Start a new thread
+    running_event.set()
+    if selected == "anti_afk":
         threading.Thread(target=anti_afk_loop, daemon=True).start()
-  elif selected == "drop_gun":
+    elif selected == "drop_gun":
         threading.Thread(target=anti_afk_and_drop, daemon=True).start()
-  elif selected == "auto_fire":
+    elif selected == "auto_fire":
         threading.Thread(target=auto_fire, daemon=True).start()
-        
+
 def on_closing():
-    global running
-    running = False  # Stop any ongoing loops
     try:
+        running_event.clear()
         app.destroy()
     except:
         pass  # Ignore errors if already closed
