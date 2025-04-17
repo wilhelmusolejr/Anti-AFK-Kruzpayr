@@ -1,13 +1,13 @@
 import tkinter as tk
 from tkinter import messagebox
-from pynput.mouse import Controller, Button
 from pynput.keyboard import Controller, Key  # <-- Make sure Key is imported
+from pynput.mouse import Controller as MouseController, Button
 import threading
 import time
 
 # Mouse Controller
-mouse = Controller()
 keyboard = Controller()
+mouse = MouseController()
 
 # FUNCTIONS
 # FUNCTIONS
@@ -67,9 +67,18 @@ def anti_afk_and_drop():
     
 
 def auto_fire():
-    while running:
-        mouse.click(Button.left, 1)
-        time.sleep(0.2)
+  global running
+  status_label.config(text="auto_fire")
+  
+  while running:
+    mouse.click(Button.left, 1)
+    time.sleep(1)
+    mouse.click(Button.left, 1)
+    time.sleep(1)
+    mouse.click(Button.left, 1)
+    time.sleep(1)
+    mouse.click(Button.left, 1)
+    time.sleep(1)
 
 
 def on_radio_select():
@@ -81,14 +90,11 @@ def on_radio_select():
   if selected == "no_action":
         messagebox.showinfo("Mode", "No Action selected. Nothing will happen.")
   elif selected == "anti_afk":
-        # messagebox.showinfo("Mode", "ANTI AFK enabled.\nSimulates small activity.")
         threading.Thread(target=anti_afk_loop).start()
   elif selected == "drop_gun":
-        # messagebox.showinfo("Mode", "ANTI AFK + Drop Gun enabled.\nSimulates activity and drops gun (G key).")
         threading.Thread(target=anti_afk_and_drop).start()
   elif selected == "auto_fire":
-        messagebox.showinfo("Mode", "Auto Fire started.\nSimulating left clicks.")
-        # threading.Thread(target=auto_fire).start()
+        threading.Thread(target=auto_fire).start()
 
 # UI Setup
 # UI Setup
