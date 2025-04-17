@@ -71,10 +71,11 @@ def on_radio_select():
   current_mode = selected  # Update current mode
   running = True
   
-  for i in range(5, 0, -1):
-    status_label.config(text=f"Starts in {i} seconds, move to your game now.")
-    app.update()
-    time.sleep(1)      
+  if(selected != "no_action"):
+    for i in range(5, 0, -1):
+      status_label.config(text=f"Starts in {i} seconds, move to your game now.")
+      app.update()
+      time.sleep(1)      
   
   if selected == "no_action":
         threading.Thread(target=stop_action, daemon=True).start()
@@ -85,18 +86,22 @@ def on_radio_select():
   elif selected == "auto_fire":
         threading.Thread(target=auto_fire, daemon=True).start()
         
-
 def on_closing():
     global running
-    running = False  
-    app.destroy()  
+    running = False  # Stop any ongoing loops
+    try:
+        app.destroy()
+    except:
+        pass  # Ignore errors if already closed
+
+
 
 # UI Setup
 # UI Setup
 # UI Setup
 # UI Setup
 app = tk.Tk()
-app.title("AFK Tool")
+app.title("Kruzpayr Anti AFK Tool")
 app.geometry("400x400")
 
 mode = tk.StringVar()
@@ -140,8 +145,22 @@ status_label = tk.Label(
 )
 status_label.pack(pady=10)
 
-app.mainloop()
+def open_link(event):
+    import webbrowser
+    webbrowser.open_new("https://wilhelmus.vercel.app?ref=anti_afk")  # Replace with your link
+
+dev_label = tk.Label(
+    app,
+    text="Developed by TC.666",
+    fg="red",
+    cursor="hand2",
+    font=("Arial", 14, "underline")
+)
+dev_label.pack(side="bottom", pady=10)
+dev_label.bind("<Button-1>", open_link)
+
 app.protocol("WM_DELETE_WINDOW", on_closing)
+app.mainloop()
 
 
 
