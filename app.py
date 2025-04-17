@@ -48,19 +48,23 @@ def stop_action():
     messagebox.showinfo("Stopped", "All actions stopped.")
 
 def anti_afk_loop():
-  status_label.config(text="ANTI AFK enabled.\nSimulates small activity.")  
+  global running
+  status_label.config(text="anti_afk_loop")  
   
-  while True:
+  while running:
       press_key_for_seconds(Key.enter, 1)  
       time.sleep(10)
     
 def anti_afk_and_drop():
-    import pyautogui
-    while running:
-        pyautogui.press('g')  # Drop gun
-        pyautogui.moveRel(1, 0, duration=0.1)
-        pyautogui.moveRel(-1, 0, duration=0.1)
-        time.sleep(10)
+  global running
+  status_label.config(text="anti_afk_and_drop")  
+  
+  while running:
+      press_key_for_seconds(Key.enter, 1)
+      time.sleep(1)
+      press_key_for_seconds('g', 1)
+      time.sleep(9)
+    
 
 def auto_fire():
     while running:
@@ -80,8 +84,8 @@ def on_radio_select():
         # messagebox.showinfo("Mode", "ANTI AFK enabled.\nSimulates small activity.")
         threading.Thread(target=anti_afk_loop).start()
   elif selected == "drop_gun":
-        messagebox.showinfo("Mode", "ANTI AFK + Drop Gun enabled.\nSimulates activity and drops gun (G key).")
-        # threading.Thread(target=anti_afk_and_drop).start()
+        # messagebox.showinfo("Mode", "ANTI AFK + Drop Gun enabled.\nSimulates activity and drops gun (G key).")
+        threading.Thread(target=anti_afk_and_drop).start()
   elif selected == "auto_fire":
         messagebox.showinfo("Mode", "Auto Fire started.\nSimulating left clicks.")
         # threading.Thread(target=auto_fire).start()
