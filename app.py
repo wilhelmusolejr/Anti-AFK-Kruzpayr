@@ -1,7 +1,9 @@
-import tkinter as tk
 from pynput.keyboard import Controller, Key 
 from pynput.mouse import Controller as MouseController, Button
+
+import tkinter as tk
 import threading
+import pyautogui
 import time
 
 # Controller
@@ -16,6 +18,35 @@ def press_key_for_seconds(key, duration):
     time.sleep(duration)
     keyboard.release(key)
 
+def click_ready_button():
+    screen_width, screen_height = pyautogui.size()
+    
+    # Use average ratio from your sample
+    rel_x = 0.91666
+    rel_y = 0.7245
+    
+    x = int(screen_width * rel_x)
+    y = int(screen_height * rel_y)
+    
+    pyautogui.moveTo(x, y)
+    time.sleep(0.3)
+    pyautogui.click()
+    
+def mouse_click(duration):
+    mouse.click(Button.left, 1)
+    time.sleep(duration)
+    mouse.release(Button.left)    
+
+def click_center_screen():
+    screen_width, screen_height = pyautogui.size()
+    
+    # Center of the screen
+    x = int(screen_width * 0.5)
+    y = int(screen_height * 0.5)
+    
+    pyautogui.moveTo(x, y)
+    time.sleep(0.3)
+    pyautogui.click()
 # Globals
 # Globals
 # Globals
@@ -39,22 +70,53 @@ def anti_afk_and_drop():
     status_label.config(text="Running...")  
     
     while running_event.is_set() and current_mode == "drop_gun":
-        press_key_for_seconds(Key.enter, 1)
-        time.sleep(1)
+        # Press and hold left button
+        click_center_screen()
+        mouse_click(2)
+        
         press_key_for_seconds('g', 1)
-        time.sleep(9)
+        press_key_for_seconds(Key.enter, 1)
+        press_key_for_seconds('g', 1)
+        press_key_for_seconds(Key.enter, 1)
+        press_key_for_seconds('g', 1)
+        
+        # Press and hold left button
+        mouse_click(2)
+        
+        time.sleep(2)
+        click_ready_button()
+        click_center_screen()
+        time.sleep(2)
     
 def auto_fire():
     global current_mode
     
     shots = 0
+    shot_count = 5
     while running_event.is_set() and current_mode == "auto_fire":
-        for i in range(4):
-            mouse.click(Button.left, 1)
-            status_label.config(text=f"{shots} shots fired!")
-            time.sleep(1)
-            shots += 1
-        time.sleep(1)
+        # mouse_click(2)
+        # status_label.config(text=f"{shots} shots fired!")
+        mouse.click(Button.left, 1)
+        time.sleep(0.3)
+        mouse.click(Button.left, 1)
+        time.sleep(0.3)
+        mouse.click(Button.left, 1)
+        time.sleep(0.3)
+        mouse.click(Button.left, 1)
+        time.sleep(0.3)
+        mouse.click(Button.left, 1)
+        time.sleep(0.3)
+        mouse.click(Button.left, 1)
+        time.sleep(0.3)
+        mouse.click(Button.left, 1)
+        time.sleep(0.3)
+        mouse.click(Button.left, 1)
+        time.sleep(0.3)
+        
+        
+        shots += shot_count
+        time.sleep(3)
+        click_ready_button()
 
 def on_radio_select():
     global current_mode
@@ -94,7 +156,6 @@ def on_closing():
         app.destroy()
     except:
         pass  # Ignore errors if already closed
-
 
 
 # UI Setup
