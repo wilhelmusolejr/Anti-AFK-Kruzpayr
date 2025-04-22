@@ -115,7 +115,7 @@ def auto_fire():
         
         
         shots += shot_count
-        time.sleep(3)
+        time.sleep(1)
         click_ready_button()
 
 def on_radio_select():

@@ -1,0 +1,7 @@
+1. Check current state 
+if in lobby, set all clients to click in READY, JOIN BUTTON
+if in game, bots run walk_left_right()
+if in game, shooter, run to the area, and fire()
+
+during the STATE, 
+Check every 1 minute
