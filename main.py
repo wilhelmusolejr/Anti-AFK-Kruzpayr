@@ -1,6 +1,7 @@
 from pynput.keyboard import Controller, Key 
 from pynput.mouse import Controller as MouseController, Button
 from play import parse_macro, run_macro
+from image_analysis import isInLobby
 
 import tkinter as tk
 import threading
@@ -25,12 +26,50 @@ def press_key_for_seconds(key, duration):
   keyboard.press(key)
   time.sleep(duration)
   keyboard.release(key)    
-  
 
+def click_ready_button():
+    screen_width, screen_height = pyautogui.size()
+    
+    # Use average ratio from your sample
+    rel_x = 0.91666
+    rel_y = 0.7245
+    
+    x = int(screen_width * rel_x)
+    y = int(screen_height * rel_y)
+    
+    pyautogui.moveTo(x, y)
+    time.sleep(0.3)
+    pyautogui.click()
+
+def click_okay_button():
+  x = 639
+  y = 439
+
+  pyautogui.moveTo(x, y)
+  time.sleep(0.3)
+  pyautogui.click()
+
+def click_to_right():
+  x = 1119
+  y = 337
+
+  pyautogui.moveTo(x, y)
+  time.sleep(0.3)
+  pyautogui.click()
+      
 # Getting state from the game
 def detect_state():
-    # return random.choice(['inlobby', 'ingame'])
-    return 'ingame'
+  time.sleep(2)  # Wait for the state thread to start
+  screenshot = pyautogui.screenshot()
+  isInlobbyBa = isInLobby(screenshot, "lobby.bmp")
+  status = None
+  
+  if isInlobbyBa:
+      status = 'inlobby'
+  else:
+      status = 'ingame'
+  
+  return status
 
 # Function to check the state
 def state_checker():
@@ -39,7 +78,7 @@ def state_checker():
         new_state = detect_state()
         print(f"[STATE CHECK] Current state: {new_state}")
         current_state = new_state
-        time.sleep(10)
+        time.sleep(30)
 
 # Start the state-checking thread
 state_thread = threading.Thread(target=state_checker, daemon=True)
@@ -47,7 +86,6 @@ state_thread.start()
 
 # Main thread (for testing)
 time.sleep(5)  # Wait for the state thread to start
-
 while True:
     print(f"[MAIN LOOP] Preparing")
     
@@ -73,7 +111,15 @@ while True:
           time.sleep(0.5)
           
     if(current_state == "inlobby"):
-      print("user pressed ready button")
-      time.sleep(9)
+      while current_state == "inlobby":
+        print("user pressed ready button")
+        if(user_type == "shooter"):
+          click_okay_button()
+          click_to_right()
+          click_ready_button()
+        else:
+          click_ready_button()
+        
+        time.sleep(9)
     
     time.sleep(1)
