@@ -1,3 +1,13 @@
+# Shared state variable
+# Shared state variable
+# Shared state variable
+current_state = "inlobby"
+previous_state = "inlobby"
+
+user_type = "bot" # shooter, bot, earner
+did_walk = False
+sleeping_time = 30
+
 from pynput.keyboard import Controller, Key 
 from pynput.mouse import Controller as MouseController, Button
 from play import parse_macro, run_macro
@@ -10,16 +20,11 @@ import threading
 import time
 import random
 
+pyautogui.FAILSAFE = False
+
 # Controller
 keyboard = Controller()
 mouse = MouseController()
-
-# Shared state variable
-current_state = "inlobby"
-previous_state = "inlobby"
-user_type = "bot" # shooter, bot
-did_walk = False
-sleeping_time = 30
 
 # FUNCTIONS
 # FUNCTIONS
@@ -52,7 +57,7 @@ def click_okay_button():
   mouse.click(Button.left, 1)
 
 def click_to_right():
-  x = 675
+  x = 620
   y = 316
 
   pyautogui.moveTo(x, y)
@@ -62,8 +67,7 @@ def click_to_right():
 # Getting state from the game
 def detect_state():
   time.sleep(2)  # Wait for the state thread to start
-  screenshot = pyautogui.screenshot()
-  isInlobbyBa = isInLobby(screenshot, "lobby.bmp")
+  isInlobbyBa = isInLobby("lobby.bmp")
   status = None
   
   if isInlobbyBa:
@@ -110,20 +114,21 @@ while True:
           
           while current_state == "ingame":
               print('user pressed fire button')
-              mouse.click(Button.left, 1)
+              mouse.click(Button.right, 1)
               time.sleep(0.3)
         
         if(user_type == "bot"):
           press_key_for_seconds('a', 2)
-          press_key_for_seconds(Key.enter, 1)
-          time.sleep(0.5)
+          time.sleep(1)
           
     if(current_state == "inlobby"):
       while current_state == "inlobby":
         print("user pressed ready button")
-        if(user_type == "shooter"):
+        if(user_type == "shooter" or user_type == "earner"):
           click_okay_button()
+          time.sleep(1)
           click_to_right()
+          time.sleep(1)
           click_ready_button()
         else:
           click_ready_button()
@@ -133,7 +138,7 @@ while True:
     if(current_state == "ingame"):
       if(user_type == "shooter"):
         
-        if not did_walk:
+        if not did_walk and user_type == "shooter":
           print('user walk to location')
           macro_events = parse_macro("Macro 1.xml")
           run_macro(macro_events)
@@ -141,12 +146,12 @@ while True:
 
         while current_state == "ingame":
           print('user pressed fire button')
-          mouse.click(Button.left, 1)
+          mouse.click(Button.right, 1)
           time.sleep(0.3)
 
       if(user_type == "bot"):
         while current_state == "ingame":
           press_key_for_seconds('a', 2)
-          time.sleep(0.5)
+          time.sleep(1)
 
     time.sleep(1)

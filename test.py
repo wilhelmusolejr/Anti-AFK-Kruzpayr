@@ -1,10 +1,7 @@
-from pynput.mouse import Listener
+from pynput.mouse import Controller
 
-def on_click(x, y, button, pressed):
-    if pressed:
-        print(f"🖱️ Mouse clicked at ({x}, {y}) with {button}")
+x = 620
+y = 316
 
-# Start listening
-with Listener(on_click=on_click) as listener:
-    print("🎯 Listening for mouse clicks... Press Ctrl+C to stop.")
-    listener.join()
+mouse = Controller()
+mouse.position = (x, y)  # This does not raise a fail-safe
