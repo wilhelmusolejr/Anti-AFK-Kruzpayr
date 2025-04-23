@@ -17,7 +17,9 @@ mouse = MouseController()
 # Shared state variable
 current_state = "inlobby"
 previous_state = "inlobby"
-user_type = "shooter" # shooter, bot
+user_type = "bot" # shooter, bot
+did_walk = False
+sleeping_time = 30
 
 # FUNCTIONS
 # FUNCTIONS
@@ -39,23 +41,23 @@ def click_ready_button():
     
     pyautogui.moveTo(x, y)
     time.sleep(0.3)
-    pyautogui.click()
+    mouse.click(Button.left, 1)
 
 def click_okay_button():
-  x = 639
-  y = 439
+  x = 463
+  y = 363
 
   pyautogui.moveTo(x, y)
   time.sleep(0.3)
-  pyautogui.click()
+  mouse.click(Button.left, 1)
 
 def click_to_right():
-  x = 1119
-  y = 337
+  x = 675
+  y = 316
 
   pyautogui.moveTo(x, y)
   time.sleep(0.3)
-  pyautogui.click()
+  mouse.click(Button.left, 1)
       
 # Getting state from the game
 def detect_state():
@@ -73,12 +75,17 @@ def detect_state():
 
 # Function to check the state
 def state_checker():
-    global current_state
+    global current_state, did_walk
+
     while True:
         new_state = detect_state()
         print(f"[STATE CHECK] Current state: {new_state}")
         current_state = new_state
-        time.sleep(30)
+
+        if new_state == "inlobby":
+          did_walk = False
+
+        time.sleep(sleeping_time)
 
 # Start the state-checking thread
 state_thread = threading.Thread(target=state_checker, daemon=True)
@@ -108,6 +115,7 @@ while True:
         
         if(user_type == "bot"):
           press_key_for_seconds('a', 2)
+          press_key_for_seconds(Key.enter, 1)
           time.sleep(0.5)
           
     if(current_state == "inlobby"):
@@ -122,4 +130,23 @@ while True:
         
         time.sleep(9)
     
+    if(current_state == "ingame"):
+      if(user_type == "shooter"):
+        
+        if not did_walk:
+          print('user walk to location')
+          macro_events = parse_macro("Macro 1.xml")
+          run_macro(macro_events)
+          did_walk = True
+
+        while current_state == "ingame":
+          print('user pressed fire button')
+          mouse.click(Button.left, 1)
+          time.sleep(0.3)
+
+      if(user_type == "bot"):
+        while current_state == "ingame":
+          press_key_for_seconds('a', 2)
+          time.sleep(0.5)
+
     time.sleep(1)
