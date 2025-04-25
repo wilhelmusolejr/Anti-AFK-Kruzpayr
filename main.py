@@ -8,6 +8,10 @@ user_type = "shooter" # shooter, bot, earner
 did_walk = False
 sleeping_time = 5
 
+# Shared state variable
+# Shared state variable
+# Shared state variable
+
 from pynput.keyboard import Controller, Key 
 from pynput.mouse import Controller as MouseController, Button
 from play import parse_macro, run_macro
