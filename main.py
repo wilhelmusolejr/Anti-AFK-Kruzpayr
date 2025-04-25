@@ -139,7 +139,6 @@ def ready_to_walk():
   
   macro_events = parse_macro("Macro 1.xml")
   run_macro(macro_events)
-  press_key_for_seconds("w", 0.3)
   did_walk = True
 
 # ----------------------
