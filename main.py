@@ -3,10 +3,12 @@
 # Shared state variable
 current_state = None
 previous_state = None
-
-user_type = "shooter" # shooter, bot, earner
+notified_user = False
 did_walk = False
 sleeping_time = 5
+
+client_id = "154.26.137.12"
+user_type = "shooter" # shooter, bot, earner
 
 # Shared state variable
 # Shared state variable
@@ -16,6 +18,7 @@ from pynput.keyboard import Controller, Key
 from pynput.mouse import Controller as MouseController, Button
 from play import parse_macro, run_macro
 from image_analysis import state, isPlayerValidWalk
+from telebram import sendMessage, sendScreenshot
 
 import threading
 import pyautogui
@@ -139,7 +142,7 @@ def ready_to_walk():
   
   macro_events = parse_macro("Macro 1.xml")
   run_macro(macro_events)
-  press_key_for_seconds('w', 0.2)
+  press_key_for_seconds('w', 0.1)
   did_walk = True
 
 # ----------------------
@@ -249,7 +252,6 @@ def state_checker():
         print(f"🕐 Sleeping for {sleeping_time} seconds...")
         time.sleep(sleeping_time)
 
-
 # Start the state-checking thread
 state_thread = threading.Thread(target=state_checker, daemon=True)
 state_thread.start()
@@ -268,5 +270,12 @@ while True:
 
   elif current_state == "ingame":
     handle_ingame()
+    
+  elif current_state == "inoutside":
+    if not notified_user:
+      sendMessage("In outside: " + str(client_id))
+      sendScreenshot()
+      time.sleep(2)
+      notified_user = True
         
   time.sleep(1)
