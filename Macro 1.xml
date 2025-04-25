@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Macro xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Name>Macro 1</Name>
+  <Name>auto fire</Name>
   <Guid>22bac9e6-cac6-45ed-a370-704b7f54a4b1</Guid>
   <MacroEvents>
     <MacroEvent>
@@ -11,7 +11,7 @@
     </MacroEvent>
     <MacroEvent>
       <Type>1</Type>
-      <Delay>129</Delay>
+      <Delay>99</Delay>
       <KeyEvent>
         <Makecode>4</Makecode>
         <State>1</State>
@@ -19,14 +19,14 @@
     </MacroEvent>
     <MacroEvent>
       <Type>1</Type>
-      <Delay>1252</Delay>
+      <Delay>705</Delay>
       <KeyEvent>
         <Makecode>32</Makecode>
       </KeyEvent>
     </MacroEvent>
     <MacroEvent>
       <Type>1</Type>
-      <Delay>5531</Delay>
+      <Delay>2200</Delay>
       <KeyEvent>
         <Makecode>32</Makecode>
         <State>1</State>
@@ -34,14 +34,14 @@
     </MacroEvent>
     <MacroEvent>
       <Type>1</Type>
-      <Delay>196</Delay>
+      <Delay>55</Delay>
       <KeyEvent>
         <Makecode>17</Makecode>
       </KeyEvent>
     </MacroEvent>
     <MacroEvent>
       <Type>1</Type>
-      <Delay>1261</Delay>
+      <Delay>2420</Delay>
       <KeyEvent>
         <Makecode>17</Makecode>
         <State>1</State>
@@ -49,74 +49,14 @@
     </MacroEvent>
     <MacroEvent>
       <Type>1</Type>
-      <Delay>250</Delay>
+      <Delay>199</Delay>
       <KeyEvent>
         <Makecode>30</Makecode>
       </KeyEvent>
     </MacroEvent>
     <MacroEvent>
       <Type>1</Type>
-      <Delay>735</Delay>
-      <KeyEvent>
-        <Makecode>30</Makecode>
-        <State>1</State>
-      </KeyEvent>
-    </MacroEvent>
-    <MacroEvent>
-      <Type>1</Type>
-      <Delay>397</Delay>
-      <KeyEvent>
-        <Makecode>17</Makecode>
-      </KeyEvent>
-    </MacroEvent>
-    <MacroEvent>
-      <Type>1</Type>
-      <Delay>614</Delay>
-      <KeyEvent>
-        <Makecode>17</Makecode>
-        <State>1</State>
-      </KeyEvent>
-    </MacroEvent>
-    <MacroEvent>
-      <Type>1</Type>
-      <Delay>544</Delay>
-      <KeyEvent>
-        <Makecode>32</Makecode>
-      </KeyEvent>
-    </MacroEvent>
-    <MacroEvent>
-      <Type>1</Type>
-      <Delay>795</Delay>
-      <KeyEvent>
-        <Makecode>32</Makecode>
-        <State>1</State>
-      </KeyEvent>
-    </MacroEvent>
-    <MacroEvent>
-      <Type>1</Type>
-      <Delay>439</Delay>
-      <KeyEvent>
-        <Makecode>17</Makecode>
-      </KeyEvent>
-    </MacroEvent>
-    <MacroEvent>
-      <Type>1</Type>
-      <Delay>3044</Delay>
-      <KeyEvent>
-        <Makecode>17</Makecode>
-        <State>1</State>
-      </KeyEvent>
-    </MacroEvent>
-    <MacroEvent>
-      <Type>1</Type>
-      <Delay>223</Delay>
-      <KeyEvent>
-        <Makecode>30</Makecode>
-      </KeyEvent>
-    </MacroEvent>
-    <MacroEvent>
-      <Type>1</Type>
-      <Delay>816</Delay>
+      <Delay>620</Delay>
       <KeyEvent>
         <Makecode>30</Makecode>
         <State>1</State>
@@ -131,7 +71,7 @@
     </MacroEvent>
     <MacroEvent>
       <Type>1</Type>
-      <Delay>4192</Delay>
+      <Delay>628</Delay>
       <KeyEvent>
         <Makecode>17</Makecode>
         <State>1</State>
@@ -139,14 +79,14 @@
     </MacroEvent>
     <MacroEvent>
       <Type>1</Type>
-      <Delay>335</Delay>
+      <Delay>339</Delay>
       <KeyEvent>
         <Makecode>32</Makecode>
       </KeyEvent>
     </MacroEvent>
     <MacroEvent>
       <Type>1</Type>
-      <Delay>1504</Delay>
+      <Delay>736</Delay>
       <KeyEvent>
         <Makecode>32</Makecode>
         <State>1</State>
@@ -154,14 +94,14 @@
     </MacroEvent>
     <MacroEvent>
       <Type>1</Type>
-      <Delay>515</Delay>
+      <Delay>367</Delay>
       <KeyEvent>
         <Makecode>17</Makecode>
       </KeyEvent>
     </MacroEvent>
     <MacroEvent>
       <Type>1</Type>
-      <Delay>2364</Delay>
+      <Delay>2996</Delay>
       <KeyEvent>
         <Makecode>17</Makecode>
         <State>1</State>
@@ -169,61 +109,136 @@
     </MacroEvent>
     <MacroEvent>
       <Type>1</Type>
-      <Delay>431</Delay>
+      <Delay>195</Delay>
       <KeyEvent>
         <Makecode>30</Makecode>
+      </KeyEvent>
+    </MacroEvent>
+    <MacroEvent>
+      <Type>1</Type>
+      <Delay>1028</Delay>
+      <KeyEvent>
+        <Makecode>30</Makecode>
+        <State>1</State>
+      </KeyEvent>
+    </MacroEvent>
+    <MacroEvent>
+      <Type>1</Type>
+      <Delay>291</Delay>
+      <KeyEvent>
+        <Makecode>17</Makecode>
+      </KeyEvent>
+    </MacroEvent>
+    <MacroEvent>
+      <Type>1</Type>
+      <Delay>4575</Delay>
+      <KeyEvent>
+        <Makecode>17</Makecode>
+        <State>1</State>
+      </KeyEvent>
+    </MacroEvent>
+    <MacroEvent>
+      <Type>1</Type>
+      <Delay>196</Delay>
+      <KeyEvent>
+        <Makecode>17</Makecode>
+      </KeyEvent>
+    </MacroEvent>
+    <MacroEvent>
+      <Type>1</Type>
+      <Delay>116</Delay>
+      <KeyEvent>
+        <Makecode>17</Makecode>
+        <State>1</State>
+      </KeyEvent>
+    </MacroEvent>
+    <MacroEvent>
+      <Type>1</Type>
+      <Delay>375</Delay>
+      <KeyEvent>
+        <Makecode>32</Makecode>
+      </KeyEvent>
+    </MacroEvent>
+    <MacroEvent>
+      <Type>1</Type>
+      <Delay>1540</Delay>
+      <KeyEvent>
+        <Makecode>32</Makecode>
+        <State>1</State>
+      </KeyEvent>
+    </MacroEvent>
+    <MacroEvent>
+      <Type>1</Type>
+      <Delay>343</Delay>
+      <KeyEvent>
+        <Makecode>17</Makecode>
+      </KeyEvent>
+    </MacroEvent>
+    <MacroEvent>
+      <Type>1</Type>
+      <Delay>2384</Delay>
+      <KeyEvent>
+        <Makecode>17</Makecode>
+        <State>1</State>
+      </KeyEvent>
+    </MacroEvent>
+    <MacroEvent>
+      <Type>1</Type>
+      <Delay>411</Delay>
+      <KeyEvent>
+        <Makecode>30</Makecode>
+      </KeyEvent>
+    </MacroEvent>
+    <MacroEvent>
+      <Type>1</Type>
+      <Delay>904</Delay>
+      <KeyEvent>
+        <Makecode>30</Makecode>
+        <State>1</State>
+      </KeyEvent>
+    </MacroEvent>
+    <MacroEvent>
+      <Type>1</Type>
+      <Delay>352</Delay>
+      <KeyEvent>
+        <Makecode>17</Makecode>
+      </KeyEvent>
+    </MacroEvent>
+    <MacroEvent>
+      <Type>1</Type>
+      <Delay>755</Delay>
+      <KeyEvent>
+        <Makecode>17</Makecode>
+        <State>1</State>
+      </KeyEvent>
+    </MacroEvent>
+    <MacroEvent>
+      <Type>1</Type>
+      <Delay>531</Delay>
+      <KeyEvent>
+        <Makecode>32</Makecode>
       </KeyEvent>
     </MacroEvent>
     <MacroEvent>
       <Type>1</Type>
       <Delay>852</Delay>
       <KeyEvent>
-        <Makecode>30</Makecode>
+        <Makecode>32</Makecode>
         <State>1</State>
       </KeyEvent>
     </MacroEvent>
     <MacroEvent>
       <Type>1</Type>
-      <Delay>563</Delay>
+      <Delay>798</Delay>
       <KeyEvent>
         <Makecode>17</Makecode>
       </KeyEvent>
     </MacroEvent>
     <MacroEvent>
       <Type>1</Type>
-      <Delay>792</Delay>
+      <Delay>90</Delay>
       <KeyEvent>
         <Makecode>17</Makecode>
-        <State>1</State>
-      </KeyEvent>
-    </MacroEvent>
-    <MacroEvent>
-      <Type>1</Type>
-      <Delay>603</Delay>
-      <KeyEvent>
-        <Makecode>32</Makecode>
-      </KeyEvent>
-    </MacroEvent>
-    <MacroEvent>
-      <Type>1</Type>
-      <Delay>637</Delay>
-      <KeyEvent>
-        <Makecode>32</Makecode>
-        <State>1</State>
-      </KeyEvent>
-    </MacroEvent>
-    <MacroEvent>
-      <Type>1</Type>
-      <Delay>2189</Delay>
-      <KeyEvent>
-        <Makecode>32</Makecode>
-      </KeyEvent>
-    </MacroEvent>
-    <MacroEvent>
-      <Type>1</Type>
-      <Delay>60</Delay>
-      <KeyEvent>
-        <Makecode>32</Makecode>
         <State>1</State>
       </KeyEvent>
     </MacroEvent>
