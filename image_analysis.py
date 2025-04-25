@@ -42,6 +42,8 @@ def isInLobby(img_path_lobby_reference):
     return score > 0.5
 
 def state():
+    global main_model
+    
     if main_model is None:
         main_model = TFSMLayer("machine learning\main\model.savedmodel", call_endpoint="serving_default")
     
@@ -120,5 +122,3 @@ def isPlayerValidWalk():
     confidence_score = prediction_array[0][index]
     
     return class_name == "good"
-
-isPlayerValidWalk()
