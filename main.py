@@ -214,14 +214,19 @@ def state_checker():
                     
                   for i in range(attempt_num):
                     if isPlayerValidWalk():
+                      press_key_for_seconds(Key.f5, 1)
                       valid_walk_found = True
                       time.sleep(5)
                       break
+                    else:
+                      press_key_for_seconds(Key.f6, 1)
                     
                   if not valid_walk_found:
                     sleeping_time = 5
                     
                     if user_type == "bot":
+                      press_key_for_seconds(Key.f7, 1)
+                      time.sleep(1)
                       press_key_for_seconds(Key.esc, 1)
                       time.sleep(1)
                       press_key_for_seconds(Key.enter, 1)
