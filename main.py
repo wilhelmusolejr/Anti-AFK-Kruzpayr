@@ -139,6 +139,7 @@ def ready_to_walk():
   
   macro_events = parse_macro("Macro 1.xml")
   run_macro(macro_events)
+  press_key_for_seconds("w", 0.3)
   did_walk = True
 
 # ----------------------
@@ -153,7 +154,7 @@ def handle_ingame():
       print("🔫 Starting firing loop...")
       ready_to_fire()
     
-  elif user_type == "bot":
+  elif user_type in ["bot", "earner"]:
       press_key_for_seconds('a', 2)
       time.sleep(1) 
 
@@ -209,13 +210,24 @@ def state_checker():
                 if isPlayerValidWalk():
                   sleeping_time = 690 - 120
                 else:
-                  if user_type == "bot":
-                    press_key_for_seconds(Key.esc, 1)
-                    time.sleep(1)
-                    press_key_for_seconds(Key.enter, 1)
-                    time.sleep(1)
-                    press_key_for_seconds(Key.enter, 1)
+                  valid_walk_found = False
+                  attempt_num = 20
+                    
+                  for i in range(attempt_num):
+                    if isPlayerValidWalk():
+                      valid_walk_found = True
+                      time.sleep(5)
+                      break
+                    
+                  if not valid_walk_found:
                     sleeping_time = 5
+                    
+                    if user_type == "bot":
+                      press_key_for_seconds(Key.esc, 1)
+                      time.sleep(1)
+                      press_key_for_seconds(Key.enter, 1)
+                      time.sleep(1)
+                      press_key_for_seconds(Key.enter, 1)
 
             elif ingame_start_time:
                 elapsed = time.time() - ingame_start_time
