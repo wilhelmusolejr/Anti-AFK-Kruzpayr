@@ -5,3 +5,23 @@ if in game, shooter, run to the area, and fire()
 
 during the STATE, 
 Check every 1 minute
+
+-------------------------
+30 minute LOBBY
+30 minute waiting time
+12 minutes game
+1 minute game result
+
+
+// start 
+for i range(60)
+	ready_button()
+	time.sleep(1)
+
+for i range(30)
+	nothing just wait 30 seconds
+	time.sleep(1)
+
+for i range (300)
+	fire()
+	time.sleep(1)

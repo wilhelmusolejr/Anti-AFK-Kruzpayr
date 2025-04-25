@@ -1,0 +1,4 @@
+0 ingame
+1 inlobby
+2 ingameresult
+3 inwaitinggame
