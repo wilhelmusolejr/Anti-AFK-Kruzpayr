@@ -271,6 +271,14 @@ while True:
   elif current_state == "ingame":
     handle_ingame()
     
+  elif current_state == "ingameresult":
+    print("done game")
+    # if not notified_user:
+    #   sendMessage("In result: " + str(client_id))
+    #   sendScreenshot()
+    #   time.sleep(2)
+    #   notified_user = True
+    
   elif current_state == "inoutside":
     if not notified_user:
       sendMessage("In outside: " + str(client_id))
