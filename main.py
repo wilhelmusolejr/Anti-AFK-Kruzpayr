@@ -289,8 +289,12 @@ while True:
     now = datetime.now()
     if now.hour == 23 and now.minute >= 30 and not take_screenshot_on_total:
       print("Go to board")
+      open_board()
+      time.sleep(1)
       sendScreenshot()
-      time.sleep(5)
+      time.sleep(1)
+      close_board()
+      time.sleep(3)
       take_screenshot_on_total = True
     
     if now.hour == 0:
