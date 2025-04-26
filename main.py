@@ -5,6 +5,7 @@ current_state = None
 previous_state = None
 notified_user = False
 did_walk = False
+take_screenshot_on_total = False
 sleeping_time = 5
 
 client_id = "154.26.137.12"
@@ -19,6 +20,7 @@ from pynput.mouse import Controller as MouseController, Button
 from play import parse_macro, run_macro
 from image_analysis import state, isPlayerValidWalk
 from telebram import sendMessage, sendScreenshot
+from datetime import datetime
 
 import threading
 import pyautogui
@@ -146,6 +148,24 @@ def ready_to_walk():
   did_walk = True
 
 # ----------------------
+def open_board():
+  x = 777
+  y = 14
+
+  pyautogui.moveTo(x, y)
+  time.sleep(0.3)
+  mouse.click(Button.left, 1)
+
+# ----------------------
+def close_board():
+  x = 766
+  y = 29
+
+  pyautogui.moveTo(x, y)
+  time.sleep(0.3)
+  mouse.click(Button.left, 1)
+
+# ----------------------
 def handle_ingame():
   global did_walk
   
@@ -266,18 +286,20 @@ while True:
   print(f"[MAIN LOOP] Current State: {current_state}")
     
   if current_state == "inlobby":
+    now = datetime.now()
+    if now.hour == 23 and now.minute >= 30 and not take_screenshot_on_total:
+      print("Go to board")
+      sendScreenshot()
+      time.sleep(5)
+      take_screenshot_on_total = True
+    
+    if now.hour == 0:
+        take_screenshot_on_total = False
+
     handle_lobby()
 
   elif current_state == "ingame":
     handle_ingame()
-    
-  elif current_state == "ingameresult":
-    print("done game")
-    # if not notified_user:
-    #   sendMessage("In result: " + str(client_id))
-    #   sendScreenshot()
-    #   time.sleep(2)
-    #   notified_user = True
     
   elif current_state == "inoutside":
     if not notified_user:

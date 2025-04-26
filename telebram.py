@@ -31,4 +31,4 @@ def sendScreenshot():
     #     print("📸 Screenshot sent!")
     # else:
     #     print("❌ Failed to send screenshot:", response.text)
-        
+    
