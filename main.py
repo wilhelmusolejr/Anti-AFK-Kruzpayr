@@ -205,9 +205,6 @@ def detect_state():
 def state_checker():
     global current_state, did_walk, previous_state, sleeping_time
 
-    # When we last entered ingame
-    ingame_start_time = None
-
     while True:
         new_state = detect_state()
         print(f"[STATE CHECK] Current state: {new_state}")
@@ -217,24 +214,23 @@ def state_checker():
         # Reset if we enter lobby
         if new_state == "inlobby":
             did_walk = False
-            ingame_start_time = None
             sleeping_time = 5
 
         elif new_state == "ingameresult":
-            ingame_start_time = None
             sleeping_time = 5
 
         elif new_state == "ingame":
             if previous_state in ["inlobby", "inwaitinggame"]:
-                ingame_start_time = time.time()
                 
                 time.sleep(120)
                 
                 if isPlayerValidWalk():
-                  sleeping_time = 690 - 120
+                  sleeping_time = 30
                 else:
                   valid_walk_found = False
                   attempt_num = 20
+                  
+                  press_key_for_seconds(Key.f2, 1)
                     
                   for i in range(attempt_num):
                     if isPlayerValidWalk():
@@ -257,16 +253,7 @@ def state_checker():
                       time.sleep(1)
                       press_key_for_seconds(Key.enter, 1)
 
-            elif ingame_start_time:
-                elapsed = time.time() - ingame_start_time
-                if elapsed >= 690:
-                    sleeping_time = 5  # Recheck quickly at the end
-                else:
-                    # Wait remaining time before entering fast-check mode
-                    sleeping_time = max(690 - elapsed, 5)
-
         else:
-            ingame_start_time = None
             sleeping_time = 5  # fallback
 
         print(f"🕐 Sleeping for {sleeping_time} seconds...")
