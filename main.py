@@ -203,7 +203,7 @@ def detect_state():
 
 # ----------------------
 def state_checker():
-    global current_state, did_walk, previous_state, sleeping_time
+    global current_state, did_walk, previous_state, sleeping_time, notified_user
 
     while True:
         new_state = detect_state()
@@ -214,6 +214,7 @@ def state_checker():
         # Reset if we enter lobby
         if new_state == "inlobby":
             did_walk = False
+            notified_user = False
             sleeping_time = 5
 
         elif new_state == "ingameresult":
