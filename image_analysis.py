@@ -9,6 +9,10 @@ import cv2
 import mss
 import time
 
+import pyautogui
+import os
+from datetime import datetime
+
 main_model = None
 game_model = None
 
@@ -122,3 +126,18 @@ def isPlayerValidWalk():
     confidence_score = prediction_array[0][index]
     
     return class_name == "good"
+
+def saveScreenshot():
+    folder = "screenshots"
+    os.makedirs(folder, exist_ok=True)  # create folder if not exists
+    
+    # Timestamp filename
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = os.path.join(folder, f"screenshot_{timestamp}.png")
+    
+    # Take screenshot and save
+    screenshot = pyautogui.screenshot()
+    screenshot.save(filename)
+    
+    print(f"✅ Screenshot saved: {filename}")
+    
