@@ -18,7 +18,7 @@ user_type = "shooter" # shooter, bot, earner
 from pynput.keyboard import Controller, Key 
 from pynput.mouse import Controller as MouseController, Button
 from play import parse_macro, run_macro
-from image_analysis import state, isPlayerValidWalk
+from image_analysis import state, isPlayerValidWalk, saveScreenshot
 from telebram import sendMessage, sendScreenshot
 from datetime import datetime
 
@@ -91,12 +91,11 @@ def click_to_right():
 
 # ----------------------
 def ready_to_fire():
-  willJump = random.randint(0, 100)
-  willChat = random.randint(0, 100) 
-  willSit = random.randint(0, 100)
-  willWalk = random.randint(0, 200)
-  willSwitch = random.randint(0, 100)
-  fireSet = random.randint(0, 50)
+  willJump = random.randint(0, 500)
+  willChat = random.randint(0, 500) 
+  willSit = random.randint(0, 500)
+  willSwitch = random.randint(0, 500)
+  fireSet = random.randint(0, 500)
 
   if(willJump < 5):
     press_key_for_seconds(Key.space, 0.3)
@@ -114,12 +113,6 @@ def ready_to_fire():
     press_key_for_seconds(Key.ctrl, 0.3)
     time.sleep(random.uniform(0.3, 0.8))  
 
-  if(willWalk < 2):
-    press_key_for_seconds('a', 0.3)
-    time.sleep(random.uniform(0.3, 0.8))  
-    press_key_for_seconds('d', 0.5)
-    time.sleep(random.uniform(0.3, 0.5))  
-
   if(willSwitch < 2):
     press_key_for_seconds('1', 0.3)
     time.sleep(random.uniform(0.8, 1))
@@ -128,23 +121,36 @@ def ready_to_fire():
     mouse.click(Button.left, 1)
     time.sleep(random.uniform(0.2, 0.5))
 
-  if(fireSet == 1):
-    mouse.click(Button.left, 1)
+  if(fireSet == 100):
+    mouse.click(Button.right, 1)
   else:  
-    mouse.click(Button.right, 1)
-    time.sleep(0.3)
-    mouse.click(Button.right, 1)
-    time.sleep(0.3)
-    mouse.click(Button.right, 1)
-    time.sleep(0.3)
+    shoot = random.randint(10, 50)
+    for i in range(shoot):
+      mouse.click(Button.right, 1)
+      time.sleep(0.2)
 
 # ----------------------
 def ready_to_walk():
   global did_walk
   
-  macro_events = parse_macro("Macro 1.xml")
-  run_macro(macro_events)
-  press_key_for_seconds('w', 0.1)
+  time.sleep(3)
+  press_key_for_seconds('3', 0.5)
+  press_key_for_seconds('d', 4)
+  press_key_for_seconds('w', 2)
+  press_key_for_seconds('a', 0.5)
+  press_key_for_seconds('w', 0.5)
+  press_key_for_seconds('d', 0.5)
+  press_key_for_seconds('w', 3)
+  press_key_for_seconds('a', 0.6)
+  press_key_for_seconds('w', 6)
+  press_key_for_seconds('d', 3)
+  press_key_for_seconds('w', 5)
+  press_key_for_seconds('a', 1)
+  press_key_for_seconds('w', 0.6)
+  press_key_for_seconds('d', 0.85)
+  
+  time.sleep(1)
+  
   did_walk = True
 
 # ----------------------
@@ -177,8 +183,12 @@ def handle_ingame():
       print("🔫 Starting firing loop...")
       ready_to_fire()
     
-  elif user_type in ["bot", "earner"]:
+  elif user_type == "bot":
       press_key_for_seconds('a', 2)
+      time.sleep(1) 
+
+  elif user_type == "earner":
+      press_key_for_seconds(Key.enter, 1)
       time.sleep(1) 
 
 # ----------------------
@@ -223,36 +233,36 @@ def state_checker():
         elif new_state == "ingame":
             if previous_state in ["inlobby", "inwaitinggame"]:
                 
-                time.sleep(120)
+                time.sleep(80)
                 
                 if isPlayerValidWalk():
                   sleeping_time = 30
-                else:
-                  valid_walk_found = False
-                  attempt_num = 20
+                # else:
+                #   valid_walk_found = False
+                #   attempt_num = 20
                   
-                  press_key_for_seconds(Key.f2, 1)
+                #   press_key_for_seconds(Key.f2, 1)
                     
-                  for i in range(attempt_num):
-                    if isPlayerValidWalk():
-                      press_key_for_seconds(Key.f5, 1)
-                      valid_walk_found = True
-                      time.sleep(5)
-                      break
-                    else:
-                      press_key_for_seconds(Key.f6, 1)
+                #   for i in range(attempt_num):
+                #     if isPlayerValidWalk():
+                #       press_key_for_seconds(Key.f5, 1)
+                #       valid_walk_found = True
+                #       time.sleep(5)
+                #       break
+                #     else:
+                #       press_key_for_seconds(Key.f6, 1)
                     
-                  if not valid_walk_found:
-                    sleeping_time = 5
+                #   if not valid_walk_found:
+                #     sleeping_time = 5
                     
-                    if user_type == "bot":
-                      press_key_for_seconds(Key.f7, 1)
-                      time.sleep(1)
-                      press_key_for_seconds(Key.esc, 1)
-                      time.sleep(1)
-                      press_key_for_seconds(Key.enter, 1)
-                      time.sleep(1)
-                      press_key_for_seconds(Key.enter, 1)
+                #     if user_type == "bot":
+                #       press_key_for_seconds(Key.f7, 1)
+                #       time.sleep(1)
+                #       press_key_for_seconds(Key.esc, 1)
+                #       time.sleep(1)
+                #       press_key_for_seconds(Key.enter, 1)
+                #       time.sleep(1)
+                #       press_key_for_seconds(Key.enter, 1)
 
         else:
             sleeping_time = 5  # fallback
@@ -272,6 +282,8 @@ while True:
     print(f"[STATE CHANGE] {previous_state} → {current_state}")
 
   print(f"[MAIN LOOP] Current State: {current_state}")
+  chance_to_send = random.randint(1, 500)  # adjust as needed
+  
     
   if current_state == "inlobby":
     now = datetime.now()
@@ -299,5 +311,9 @@ while True:
       sendScreenshot()
       time.sleep(2)
       notified_user = True
+      
+  if chance_to_send == 1:
+    saveScreenshot()
+    time.sleep(2)
         
   time.sleep(1)
