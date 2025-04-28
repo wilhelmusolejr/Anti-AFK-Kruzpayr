@@ -2,16 +2,14 @@ from keras.layers import TFSMLayer
 from tensorflow.keras.models import load_model
 from PIL import Image, ImageOps
 from skimage.metrics import structural_similarity as ssim
-
+from datetime import datetime
 import tensorflow as tf
+
 import numpy as np
 import cv2
 import mss
-import time
-
 import pyautogui
 import os
-from datetime import datetime
 
 main_model = None
 game_model = None
@@ -140,4 +138,7 @@ def saveScreenshot():
     screenshot.save(filename)
     
     print(f"✅ Screenshot saved: {filename}")
-    
+
+def crop_image(image, x, y, width, height):
+    crop_box = (x, y, x + width, y + height)
+    return image.crop(crop_box)
