@@ -1,10 +1,10 @@
 # ----------------------
-user_type = "shooter"  # or "earner", "bot"
+user_type = "bot"  # or "earner", "bot"
 is_last_user = False  # or True
 
 # ----------------------
-current_state = "inlobby"
-previous_state = "inlobby"
+current_state = None
+previous_state = None
 sleeping_time = 5
 # ----------------------
 
@@ -13,7 +13,7 @@ sleeping_time = 5
 # FRAMEWORKS
 from pynput.keyboard import Controller, Key 
 from pynput.mouse import Controller as MouseController, Button
-from image_analysis import state, isPlayerValidWalk, saveScreenshot
+from image_analysis import state, isPlayerValidWalk, saveScreenshot, get_screenshot
 from telebram import sendMessage, sendScreenshot
 from datetime import datetime
 from ocr import userRoomStatus
@@ -150,10 +150,12 @@ def ready_to_walk():
 # THREAD
 # THREAD
 def get_state():
-  global current_state, sleeping_time
+  global current_state, sleeping_time, previous_state
   
   while True:
-    current_state = state()
+    temp_state = state()
+    if temp_state is not None:
+      current_state = temp_state
     time.sleep(sleeping_time)
   
 # ----------------------
@@ -184,29 +186,32 @@ while True:
         click_to_right()
         time.sleep(1)
       
-      user_room_status = userRoomStatus() # Ready!
+      screenshot = get_screenshot()  
+      user_room_status = userRoomStatus(screenshot) # Ready!
       
       # USER
-      while user_room_status != "Cancel" and user_room_status != "Start" and not is_last_user:
-        if user_room_status == "Ready!":
+      while current_state == "inlobby" and user_room_status != "cancel" and user_room_status != "start" and not is_last_user:
+        if user_room_status == "ready!":
           click_ready_button()
           time.sleep(1)
-        user_room_status = userRoomStatus()
+  
+        screenshot = get_screenshot()  
+        user_room_status = userRoomStatus(screenshot)
         
       # HOST  
-      if user_room_status == "Start":
+      while current_state == "inlobby" and user_room_status == "start":
         click_ready_button()
-        time.sleep(1)
+        time.sleep(1)  
         
       # LAST USER
-      if is_last_user:
-        while user_room_status == "Ready!":
-          time.sleep(1)
-          user_room_status = userRoomStatus()
-          
-          if user_room_status == "Join Game":
-            click_ready_button()
-            time.sleep(1)
+      while user_room_status == "ready!" and is_last_user:
+        time.sleep(1)
+        screenshot = get_screenshot()  
+        user_room_status = userRoomStatus(screenshot)
+
+        if user_room_status == "join game":
+          click_ready_button()
+          time.sleep(1)  
                
     # IN GAME    
     # IN GAME    
@@ -241,6 +246,3 @@ while True:
     time.sleep(2)
   
   time.sleep(5)
-
-  
-  

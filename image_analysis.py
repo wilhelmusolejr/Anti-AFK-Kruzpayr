@@ -83,7 +83,10 @@ def state():
     
     print(f"Predicted class: {class_name} with confidence: {confidence_score:.4f}")
 
-    return class_name
+    if confidence_score >= 0.9:
+        return class_name
+    else:
+        return None
 
 def isPlayerValidWalk():
     global game_model
