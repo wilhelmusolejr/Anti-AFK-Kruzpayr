@@ -204,7 +204,7 @@ while True:
         time.sleep(1)  
         
       # LAST USER
-      while user_room_status == "ready!" and is_last_user:
+      while current_state == "inlobby" and user_room_status == "ready!" and is_last_user:
         time.sleep(1)
         screenshot = get_screenshot()  
         user_room_status = userRoomStatus(screenshot)
