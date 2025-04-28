@@ -17,10 +17,10 @@ user_type = "shooter" # shooter, bot, earner
 
 from pynput.keyboard import Controller, Key 
 from pynput.mouse import Controller as MouseController, Button
-from play import parse_macro, run_macro
 from image_analysis import state, isPlayerValidWalk, saveScreenshot
 from telebram import sendMessage, sendScreenshot
 from datetime import datetime
+from ocr import userRoomStatus
 
 import threading
 import pyautogui
@@ -149,6 +149,7 @@ def ready_to_walk():
   press_key_for_seconds('w', 0.6)
   press_key_for_seconds('d', 0.85)
   
+  sendScreenshot()
   time.sleep(1)
   
   did_walk = True
@@ -283,11 +284,10 @@ while True:
 
   print(f"[MAIN LOOP] Current State: {current_state}")
   chance_to_send = random.randint(1, 500)  # adjust as needed
-  
     
   if current_state == "inlobby":
     now = datetime.now()
-    if now.hour == 23 and now.minute >= 30 and not take_screenshot_on_total:
+    if now.hour == 23 and now.minute >= 30 and not take_screenshot_on_total and user_type == "shooter":
       print("Go to board")
       open_board()
       time.sleep(1)
@@ -311,6 +311,10 @@ while True:
       sendScreenshot()
       time.sleep(2)
       notified_user = True
+  
+  if chance_to_send == 2:
+    sendScreenshot()
+    time.sleep(2)
       
   if chance_to_send == 1:
     saveScreenshot()
