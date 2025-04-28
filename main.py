@@ -10,6 +10,8 @@ sleeping_time = 5
 
 client_id = "154.26.137.12"
 user_type = "shooter" # shooter, bot, earner
+is_last_user = True
+
 
 # Shared state variable
 # Shared state variable
@@ -195,16 +197,27 @@ def handle_ingame():
 # ----------------------
 def handle_lobby():
   print("Preparing in lobby...")
-
-  click_okay_button()
-  time.sleep(1)
   
   if user_type in ["shooter", "earner"]:
     click_to_right()
     time.sleep(1)
+  
+  click_okay_button()
+  time.sleep(1)
+  
+  user_room_status = userRoomStatus()
+  
+  if user_room_status == "Ready!" and not is_last_user:
+    click_ready_button()
+    time.sleep(1)
+
+  if user_room_status == "Start":
+    click_ready_button()
+    time.sleep(1)
     
-  click_ready_button()
-  time.sleep(9)
+  if user_room_status == "Join Game":
+    time.sleep(2)
+    click_ready_button()
 
 # ----------------------
 # Getting state from the game
