@@ -25,8 +25,9 @@ def userRoomStatus(pil_img):
     # Join Game
     # Ready!
     # Start
+    # Cancel
     
-    print(text.strip()) 
+    print(text.strip().lower()) 
 
 # screenshot = get_screenshot()  # PIL Image directly from mss
 # userRoomStatus(screenshot)  
