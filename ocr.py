@@ -1,25 +1,32 @@
 import pytesseract
 import cv2
 import numpy as np
-from PIL import Image
+
+from PIL import Image, ImageOps
+from image_analysis import crop_image
 
 # Set path to Tesseract executable (update this path to match your system)
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
-# Load the image (can be a screenshot or file)
-image_path = "Crossfire20250412_0016.bmp"  # or "screenshot.png"
-image = cv2.imread(image_path)
+def userRoomStatus(pil_img):
+    # Crop first directly on PIL image
+    cropped = crop_image(pil_img, 670, 420, 120, 40)
 
-# Preprocess the image (optional: improves OCR accuracy)
-gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-_, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY)
+    # Convert to grayscale directly using PIL
+    gray_cropped = ImageOps.grayscale(cropped)
 
-# Convert to PIL format for pytesseract
-pil_img = Image.fromarray(thresh)
+    # Optional: Apply thresholding using simple point operation (faster than OpenCV)
+    thresh_cropped = gray_cropped.point(lambda p: 255 if p > 150 else 0)
 
-# Perform OCR
-custom_config = r'--psm 6'
-text = pytesseract.image_to_string(pil_img, config=custom_config)
+    # Perform OCR
+    custom_config = r'--psm 7'  # psm 7 = Treat image as a single line of text (more aggressive and faster)
+    text = pytesseract.image_to_string(thresh_cropped, config=custom_config)
 
-# Output the result
-print("🎯 Detected Text:", text.strip())
+    # Join Game
+    # Ready!
+    # Start
+    
+    print(text.strip()) 
+
+# screenshot = get_screenshot()  # PIL Image directly from mss
+# userRoomStatus(screenshot)  
