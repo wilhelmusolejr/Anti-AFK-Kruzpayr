@@ -128,8 +128,8 @@ def isPlayerValidWalk():
     
     return class_name == "good"
 
-def saveScreenshot():
-    folder = "screenshots"
+def saveScreenshot(path = ""):
+    folder = "screenshots" +  "/" + path
     os.makedirs(folder, exist_ok=True)  # create folder if not exists
     
     # Timestamp filename
@@ -143,5 +143,40 @@ def saveScreenshot():
     print(f"✅ Screenshot saved: {filename}")
 
 def crop_image(image, x, y, width, height):
+    # Define the crop box: (left, upper, right, lower)
     crop_box = (x, y, x + width, y + height)
-    return image.crop(crop_box)
+    cropped_image = image.crop(crop_box)
+    return cropped_image
+
+def is_killing(screenshot_path):
+    # Open the image using PIL
+    image = Image.open(screenshot_path)
+
+    # Crop it
+    cropped = crop_image(image, 300, 0, 500, 200)
+
+    # Convert PIL image to OpenCV (numpy array)
+    cropped = np.array(cropped)
+
+    # Convert RGB to BGR (because PIL opens in RGB but OpenCV uses BGR)
+    cropped = cv2.cvtColor(cropped, cv2.COLOR_RGB2BGR)
+
+    # Now continue with OpenCV
+    kill_reference = cv2.imread("kill.png")
+
+    # Convert to grayscale
+    img1_gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
+    img2_gray = cv2.cvtColor(kill_reference, cv2.COLOR_BGR2GRAY)
+
+    # Resize reference image if needed
+    if img1_gray.shape != img2_gray.shape:
+        img2_gray = cv2.resize(img2_gray, (img1_gray.shape[1], img1_gray.shape[0]))
+
+    # Compute SSIM
+    score, _ = ssim(img1_gray, img2_gray, full=True)
+    print(f"SSIM Score: {score:.4f}")
+    return score > 0.5
+
+# Testing
+# image = "images/ingame.bmp"
+# is_killing(image)

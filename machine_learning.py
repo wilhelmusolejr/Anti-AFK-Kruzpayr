@@ -4,13 +4,18 @@ import tensorflow as tf
 from PIL import Image, ImageOps
 import numpy as np
 
+# inlobby
+# ingameloading
+# ingame
+# ingameresult
+# inoutside
+
 # Load the TFSMLayer model
 model = TFSMLayer("saved_model_directory", call_endpoint="serving_default")
 
 # Load class labels
 with open("labels.txt", "r") as f:
     class_names = [line.strip().split(' ', 1)[-1] for line in f]
-
 
 images = ["sample_score.bmp", "current.bmp", "lobby.bmp"]
 

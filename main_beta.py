@@ -1,8 +1,4 @@
 # ----------------------
-user_type = "bot"  # or "earner", "bot"
-is_last_user = False  # or True
-
-# ----------------------
 current_state = None
 previous_state = None
 sleeping_time = 5
@@ -11,6 +7,7 @@ sleeping_time = 5
 # FRAMEWORKS
 # FRAMEWORKS
 # FRAMEWORKS
+from dotenv import load_dotenv
 from pynput.keyboard import Controller, Key 
 from pynput.mouse import Controller as MouseController, Button
 from image_analysis import state, isPlayerValidWalk, saveScreenshot, get_screenshot
@@ -23,12 +20,21 @@ import pyautogui
 import threading
 import time
 import random
+import os
+
+# Load environment variables from .env
+load_dotenv()
+
+client_id = os.getenv("CLIENT_ID")
+user_type = os.getenv("USER_TYPE")
+is_last_user = os.getenv("IS_LAST_USER")
 
 # Controller
 # Controller
 # Controller
 keyboard = Controller()
 mouse = MouseController()
+state_lock = threading.Lock()  
 
 # FUNCTIONS
 # FUNCTIONS
@@ -149,15 +155,17 @@ def ready_to_walk():
 # THREAD
 # THREAD
 # THREAD
+# THREAD
 def get_state():
-  global current_state, sleeping_time, previous_state
-  
-  while True:
-    temp_state = state()
-    if temp_state is not None:
-      current_state = temp_state
-    time.sleep(sleeping_time)
-  
+    global current_state, sleeping_time
+
+    while True:
+        temp_state = state()
+        if temp_state is not None:
+            with state_lock:
+                current_state = temp_state
+        time.sleep(sleeping_time)
+        
 # ----------------------
 # ----------------------
 # ----------------------
@@ -166,83 +174,111 @@ state_thread = threading.Thread(target=get_state, daemon=True)
 state_thread.start()
 
 while True:
-  
-  chance_to_send = random.randint(1, 500)  # adjust as needed
+    chance_to_send = random.randint(1, 500)  # adjust as needed
 
-  if current_state != previous_state:
-    
-    print(f"State changed from {previous_state} to {current_state}")
-    
-    # LOBBY
-    # LOBBY
-    # LOBBY
-    if current_state == "inlobby":
-      print("[LOBBY] - Start")
-      
-      click_okay_button()
-      time.sleep(1)
-      
-      if user_type in ["shooter", "earner"]:
-        click_to_right()
-        time.sleep(1)
-      
-      screenshot = get_screenshot()  
-      user_room_status = userRoomStatus(screenshot) # Ready!
-      
-      # USER
-      while current_state == "inlobby" and user_room_status != "cancel" and user_room_status != "start" and not is_last_user:
-        if user_room_status == "ready!":
-          click_ready_button()
-          time.sleep(1)
-  
-        screenshot = get_screenshot()  
-        user_room_status = userRoomStatus(screenshot)
-        
-      # HOST  
-      while current_state == "inlobby" and user_room_status == "start":
-        click_ready_button()
-        time.sleep(1)  
-        
-      # LAST USER
-      while current_state == "inlobby" and user_room_status == "ready!" and is_last_user:
-        time.sleep(1)
-        screenshot = get_screenshot()  
-        user_room_status = userRoomStatus(screenshot)
+    with state_lock:
+        snapshot_state = current_state  # NEW: snapshot safely
 
-        if user_room_status == "join game":
-          click_ready_button()
-          time.sleep(1)  
-               
-    # IN GAME    
-    # IN GAME    
-    # IN GAME
-    if current_state == "ingame":
-      print("[INGAME] - Start")
-      
-      # SHOOTER - walk
-      if user_type == "shooter":
-        ready_to_walk()
-        
-      while current_state == "ingame":
-        
-        # SHOOTER - Fire
-        if user_type == "shooter":
-          ready_to_fire()
+    if snapshot_state != previous_state:
+        print(f"State changed from {previous_state} to {snapshot_state}")
+
+        # LOBBY
+        if snapshot_state == "inlobby":
+            print("[LOBBY] - Start")
+            
+            # Record the time when entering lobby
+            lobby_enter_time = time.time()  
+
+            click_okay_button()
+            time.sleep(1)
+
+            if user_type in ["shooter", "earner"]:
+                click_to_right()
+                time.sleep(1)
+
+            screenshot = get_screenshot()
+            user_room_status = userRoomStatus(screenshot)
+
+            while True:
+                with state_lock:
+                    if current_state != "inlobby":
+                        break  # if state changed, exit
+
+                elapsed_time = time.time() - lobby_enter_time
+                
+                if elapsed_time > 60:
+                    print("[LOBBY] - Still in lobby after 30 seconds, saving screenshot...")
+                    saveScreenshot("inlobby/error")
+                    time.sleep(1)
+                    sendScreenshot()
+                    time.sleep(1)
+                    lobby_enter_time = time.time()  # reset timer after saving
+
+                # Update room status
+                screenshot = get_screenshot()
+                user_room_status = userRoomStatus(screenshot)
+
+                # USER
+                if user_room_status == "ready!" and not is_last_user:
+                    click_ready_button()
+                    time.sleep(1)
+                    continue
+                
+                # HOST
+                if user_room_status == "start":
+                    click_ready_button()
+                    time.sleep(1)
+                    continue
+                
+                # LAST USER
+                if is_last_user:
+                    if user_room_status == "join game":
+                        click_ready_button()
+                        time.sleep(1)
+                        continue
+                
+        # GAME
+        if snapshot_state == "ingame":
+            print("[INGAME] - Start")
+
+            if user_type == "shooter":
+                ready_to_walk()
+
+            while True:
+                with state_lock:
+                    if current_state != "ingame":
+                        break
+
+                if user_type == "shooter":
+                    ready_to_fire()
+
+                if user_type == "bot":
+                    press_key_for_seconds('a', 2)
+
+                time.sleep(1)
+
+        # GAME RESULT
+        if snapshot_state == "ingameresult":
+            saveScreenshot("ingameresult")
+            time.sleep(2)
           
-        # Bot - action
-        if user_type == "bot":
-          press_key_for_seconds('a', 2)
-        
-        time.sleep(1)
-        
-    previous_state = current_state
-        
-  if chance_to_send == 2:
-    sendScreenshot()
-    time.sleep(2)
-      
-  if chance_to_send == 1:
-    saveScreenshot()
-    time.sleep(2)
-  
-  time.sleep(5)
+        # GAME OUTSIDE  
+        if snapshot_state == "inoutside":
+            sendMessage("Client ", client_id, " is outside the room")
+            time.sleep(1)
+            saveScreenshot("inoutside")
+            time.sleep(1)
+
+        previous_state = snapshot_state  # Update after processing
+
+    if chance_to_send == 2:
+        sendScreenshot()
+        time.sleep(2)
+
+    if chance_to_send == 1:
+        saveScreenshot("random")
+        time.sleep(2)
+
+    print(f"Current state: {current_state}")
+
+    time.sleep(5)
