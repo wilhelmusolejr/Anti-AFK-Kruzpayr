@@ -116,7 +116,6 @@ def ready_to_walk():
   press_key_for_seconds('a', 1)
   press_key_for_seconds('w', 0.6)
   press_key_for_seconds('d', 0.85)
-  
   time.sleep(1)
 
 # THREAD
@@ -148,11 +147,10 @@ while True:
 
     if snapshot_state != previous_state:
         print(f"State changed from {previous_state} to {snapshot_state}")
+        print(f"[{snapshot_state.upper()}] - START")
 
         # LOBBY
         if snapshot_state == "inlobby":
-            print("[LOBBY] - Start")
-            
             # Record the time when entering lobby
             lobby_enter_time = time.time()  
 
@@ -208,8 +206,6 @@ while True:
                 
         # GAME
         if snapshot_state == "ingame":
-            print("[INGAME] - Start")
-
             if user_type == "shooter":
                 ready_to_walk()
 
@@ -255,10 +251,6 @@ while True:
             time.sleep(1)
 
         previous_state = snapshot_state  # Update after processing
-
-    if chance_to_send == 2:
-        sendScreenshot()
-        time.sleep(2)
 
     if chance_to_send == 1:
         saveScreenshot("random")
