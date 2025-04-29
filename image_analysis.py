@@ -177,6 +177,3 @@ def is_killing(screenshot_path):
     print(f"SSIM Score: {score:.4f}")
     return score > 0.5
 
-# Testing
-# image = "images/ingame.bmp"
-# is_killing(image)
