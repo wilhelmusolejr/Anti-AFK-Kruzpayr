@@ -13,7 +13,7 @@ from pynput.mouse import Controller as MouseController, Button
 from image_analysis import state, isPlayerValidWalk, saveScreenshot, get_screenshot
 from telebram import sendMessage, sendScreenshot
 from datetime import datetime
-from ocr import userRoomStatus
+from ocr import userRoomStatus, get_exp, get_gp
 
 import threading
 import pyautogui
@@ -260,7 +260,22 @@ while True:
         # GAME RESULT
         if snapshot_state == "ingameresult":
             saveScreenshot("ingameresult")
-            time.sleep(2)
+            time.sleep(1)
+            
+            if user_type == "shooter":
+              gp = get_gp()
+              time.sleep(1)
+              exp = get_exp()
+              time.sleep(1)
+              kills = 65
+
+              message = (
+                  f"📈 EXP     =  {exp}\n"
+                  f"💰 GP       =  {gp}\n"
+                  f"🔫 KILLS  =  {kills}"
+              )
+              
+              sendMessage(message)
           
         # GAME OUTSIDE  
         if snapshot_state == "inoutside":

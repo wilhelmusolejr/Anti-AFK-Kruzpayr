@@ -33,3 +33,5 @@ def sendScreenshot():
     data = {'chat_id': CHAT_ID}
 
     response = requests.post(url, files=files, data=data)
+
+
