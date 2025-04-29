@@ -52,6 +52,6 @@ def crop_image(image, x, y, width, height):
     return cropped_image
 
 # Example usage:
-img = Image.open("images/ingameresult.bmp")  # Open the image
-print(get_exp(img))
+# img = Image.open("images/ingameresult.bmp")  # Open the image
+# print(get_exp(img))
 
