@@ -225,7 +225,7 @@ while True:
                 # HOST
                 if user_room_status == "start":
                     click_ready_button()
-                    time.sleep(1)
+                    time.sleep(10)
                     continue
                 
                 # LAST USER
@@ -262,7 +262,6 @@ while True:
               time.sleep(1)
             
             if user_type == "shooter":
-              saveScreenshot("ingameresult")
               gp = get_gp()
               exp = get_exp()
               kills = get_kill()
