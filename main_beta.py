@@ -259,8 +259,9 @@ while True:
 
         # GAME RESULT
         if snapshot_state == "ingameresult":
-            saveScreenshot("ingameresult")
-            time.sleep(1)
+            if chance_to_send == 3:
+              saveScreenshot("ingameresult")
+              time.sleep(1)
             
             if user_type == "shooter":
               gp = get_gp()
