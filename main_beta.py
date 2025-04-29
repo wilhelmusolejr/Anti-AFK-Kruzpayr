@@ -10,7 +10,7 @@ sleeping_time = 5
 from dotenv import load_dotenv
 from pynput.keyboard import Controller, Key 
 from pynput.mouse import Controller as MouseController, Button
-from image_analysis import state, isPlayerValidWalk, saveScreenshot, get_screenshot
+from image_analysis import state, saveScreenshot, get_screenshot
 from telebram import sendMessage, sendScreenshot
 from datetime import datetime
 from ocr import userRoomStatus, get_exp, get_gp
@@ -206,8 +206,8 @@ while True:
 
                 elapsed_time = time.time() - lobby_enter_time
                 
-                if elapsed_time > 60:
-                    print("[LOBBY] - Still in lobby after 30 seconds, saving screenshot...")
+                if elapsed_time > 120:
+                    sendMessage(f"⏱️ Client {client_id} has been in the lobby for over 60 seconds. Screenshot saved for review.")
                     saveScreenshot("inlobby/error")
                     time.sleep(1)
                     sendScreenshot()
@@ -279,7 +279,7 @@ while True:
           
         # GAME OUTSIDE  
         if snapshot_state == "inoutside":
-            sendMessage("Client ", client_id, " is outside the room")
+            sendMessage(f"🚨 ALERT: Client {client_id} is outside the room!")
             time.sleep(1)
             saveScreenshot("inoutside")
             time.sleep(1)
