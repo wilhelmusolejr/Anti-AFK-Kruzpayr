@@ -94,43 +94,10 @@ def click_to_right():
 
 # ----------------------
 def ready_to_fire():
-  willJump = random.randint(0, 500)
-  willChat = random.randint(0, 500) 
-  willSit = random.randint(0, 500)
-  willSwitch = random.randint(0, 500)
-  fireSet = random.randint(0, 500)
-
-  if(willJump < 5):
-    press_key_for_seconds(Key.space, 0.3)
-    time.sleep(random.uniform(0.3, 0.8))  
-
-  if(willChat < 5):
-    all_keys = [Key.f5, Key.f6, Key.f7, Key.f8]
-    random_key = random.choice(all_keys)
-    press_key_for_seconds(Key.f2, 0.3)
-    time.sleep(random.uniform(0.2, 0.5))  
-    press_key_for_seconds(random_key, 0.3)
-    time.sleep(random.uniform(0.2, 0.5))  
-
-  if(willSit < 5):
-    press_key_for_seconds(Key.ctrl, 0.3)
-    time.sleep(random.uniform(0.3, 0.8))  
-
-  if(willSwitch < 2):
-    press_key_for_seconds('1', 0.3)
-    time.sleep(random.uniform(0.8, 1))
-    mouse.click(Button.left, 1)
-    press_key_for_seconds('3', 0.3)
-    mouse.click(Button.left, 1)
-    time.sleep(random.uniform(0.2, 0.5))
-
-  if(fireSet == 100):
+  shoot = random.randint(10, 30)  # Randomize the number of shots between 1 and 3
+  for i in range(shoot):
     mouse.click(Button.right, 1)
-  else:  
-    shoot = random.randint(10, 50)
-    for i in range(shoot):
-      mouse.click(Button.right, 1)
-      time.sleep(0.2)
+    time.sleep(0.2)
 
 # ----------------------
 def ready_to_walk():
