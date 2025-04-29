@@ -277,6 +277,8 @@ while True:
               )
               
               sendMessage(message)
+              
+            time.sleep(10) # make all client to prepare for the next phase
           
         # GAME OUTSIDE  
         if snapshot_state == "inoutside":
