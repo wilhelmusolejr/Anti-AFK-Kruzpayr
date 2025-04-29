@@ -232,7 +232,11 @@ while True:
                 if is_last_user:
                     if user_room_status == "join game":
                         click_ready_button()
+                        time.sleep(10)
+                        
+                        click_to_right()
                         time.sleep(1)
+                        click_ready_button()
                         continue
                 
         # GAME
