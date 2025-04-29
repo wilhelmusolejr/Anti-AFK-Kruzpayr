@@ -13,7 +13,7 @@ from pynput.mouse import Controller as MouseController, Button
 from image_analysis import state, saveScreenshot, get_screenshot
 from telebram import sendMessage, sendScreenshot
 from datetime import datetime
-from ocr import userRoomStatus, get_exp, get_gp
+from ocr import userRoomStatus, get_exp, get_gp, get_kill
 
 import threading
 import pyautogui
@@ -27,7 +27,7 @@ load_dotenv()
 
 client_id = os.getenv("CLIENT_ID")
 user_type = os.getenv("USER_TYPE")
-is_last_user = os.getenv("IS_LAST_USER")
+is_last_user = os.getenv("IS_LAST_USER", "False").lower() == "true"
 
 # Controller
 # Controller
@@ -174,10 +174,10 @@ state_thread = threading.Thread(target=get_state, daemon=True)
 state_thread.start()
 
 while True:
-    chance_to_send = random.randint(1, 500)  # adjust as needed
+    chance_to_send = random.randint(1, 500)  
 
     with state_lock:
-        snapshot_state = current_state  # NEW: snapshot safely
+        snapshot_state = current_state  
 
     if snapshot_state != previous_state:
         print(f"State changed from {previous_state} to {snapshot_state}")
@@ -196,8 +196,7 @@ while True:
                 click_to_right()
                 time.sleep(1)
 
-            screenshot = get_screenshot()
-            user_room_status = userRoomStatus(screenshot)
+            user_room_status = userRoomStatus()
 
             while True:
                 with state_lock:
@@ -215,8 +214,7 @@ while True:
                     lobby_enter_time = time.time()  # reset timer after saving
 
                 # Update room status
-                screenshot = get_screenshot()
-                user_room_status = userRoomStatus(screenshot)
+                user_room_status = userRoomStatus()
 
                 # USER
                 if user_room_status == "ready!" and not is_last_user:
@@ -264,15 +262,14 @@ while True:
               time.sleep(1)
             
             if user_type == "shooter":
+              saveScreenshot("ingameresult")
               gp = get_gp()
-              time.sleep(1)
               exp = get_exp()
-              time.sleep(1)
-              kills = 65
+              kills = get_kill()
 
               message = (
-                  f"📈 EXP     =  {exp}\n"
                   f"💰 GP       =  {gp}\n"
+                  f"📈 EXP     =  {exp}\n"
                   f"🔫 KILLS  =  {kills}"
               )
               
@@ -297,4 +294,4 @@ while True:
 
     print(f"Current state: {current_state}")
 
-    time.sleep(5)
+    time.sleep(1)
