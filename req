@@ -1,0 +1,1 @@
+pip install pyautogui threading python-dotenv pynput opencv-python scikit-image pillow mss pytesseract requests tensorflow keyboard matplotlib psutil

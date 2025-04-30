@@ -17,7 +17,6 @@ from ocr import userRoomStatus, get_exp, get_gp, get_kill
 
 import threading
 import pyautogui
-import threading
 import time
 import random
 import os
@@ -254,6 +253,8 @@ while main_loop:
             sendMessage(f"🚨 ALERT: Client {client_id} is outside the room!")
             time.sleep(1)
             saveScreenshot("inoutside")
+            time.sleep(1)
+            sendScreenshot()
             time.sleep(1)
             main_loop = False
 
