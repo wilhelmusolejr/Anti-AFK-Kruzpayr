@@ -183,11 +183,37 @@ while main_loop:
 
                 # Update room status
                 user_room_status = userRoomStatus()
+                
+                # If user late to join
+                if user_room_status == "join game":
+                    click_ready_button()
+                    time.sleep(5)
+
+                    click_okay_button()
+                    time.sleep(1)
+
+                    click_to_right()
+                    time.sleep(1)
+                    
+                    click_ready_button()
+                    time.sleep(1)
+                    
+                    click_okay_button()
+                    time.sleep(1)
+                    continue
+                
+                # To avoid lobby AFK
+                if user_room_status == "cancel":
+                    click_okay_button()
+                    time.sleep(1)
+                    
+                    continue
 
                 # USER
                 if user_room_status == "ready!" and not is_last_user:
                     click_ready_button()
                     time.sleep(1)
+                    
                     continue
                 
                 # HOST
@@ -201,6 +227,9 @@ while main_loop:
                     if user_room_status == "join game":
                         click_ready_button()
                         time.sleep(10)
+                        
+                        click_okay_button()
+                        time.sleep(1)
                         
                         click_to_right()
                         time.sleep(1)
