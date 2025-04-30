@@ -1,0 +1,5 @@
+TOKEN=
+CHAT_ID=1559668342
+CLIENT_ID=
+USER_TYPE=bot # shooter, earner, bot
+IS_LAST_USER=False  # or False, True
