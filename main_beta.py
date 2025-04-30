@@ -139,8 +139,11 @@ def get_state():
 state_thread = threading.Thread(target=get_state, daemon=True)
 state_thread.start()
 
-while True:
-    chance_to_send = random.randint(1, 500)  
+main_loop = True
+notify_user = False
+
+while main_loop:
+    chance_to_send = random.randint(1, 1000)  
 
     with state_lock:
         snapshot_state = current_state  
@@ -170,13 +173,14 @@ while True:
 
                 elapsed_time = time.time() - lobby_enter_time
                 
-                if elapsed_time > 120:
+                if elapsed_time > 120 and not notify_user:
                     sendMessage(f"⏱️ Client {client_id} has been in the lobby for over 60 seconds. Screenshot saved for review.")
                     saveScreenshot("inlobby/error")
                     time.sleep(1)
                     sendScreenshot()
                     time.sleep(1)
-                    lobby_enter_time = time.time()  # reset timer after saving
+                    lobby_enter_time = time.time()  
+                    notify_user = True  # set flag to avoid multiple notifications
 
                 # Update room status
                 user_room_status = userRoomStatus()
@@ -240,6 +244,8 @@ while True:
               )
               
               sendMessage(message)
+            
+            notify_user = False
               
             time.sleep(10) # make all client to prepare for the next phase
           
@@ -249,6 +255,7 @@ while True:
             time.sleep(1)
             saveScreenshot("inoutside")
             time.sleep(1)
+            main_loop = False
 
         previous_state = snapshot_state  # Update after processing
 
