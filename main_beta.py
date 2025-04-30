@@ -185,7 +185,7 @@ while main_loop:
                 user_room_status = userRoomStatus()
                 
                 # If user late to join
-                if user_room_status == "join game":
+                if user_room_status == "join game" and not is_last_user:
                     click_ready_button()
                     time.sleep(5)
 
@@ -223,18 +223,22 @@ while main_loop:
                     continue
                 
                 # LAST USER
-                if is_last_user:
-                    if user_room_status == "join game":
-                        click_ready_button()
-                        time.sleep(10)
-                        
-                        click_okay_button()
-                        time.sleep(1)
-                        
-                        click_to_right()
-                        time.sleep(1)
-                        click_ready_button()
-                        continue
+                if user_room_status == "join game" and is_last_user:
+                    click_ready_button()
+                    time.sleep(5)
+
+                    click_okay_button()
+                    time.sleep(1)
+
+                    click_to_right()
+                    time.sleep(1)
+                    
+                    click_ready_button()
+                    time.sleep(1)
+                    
+                    click_okay_button()
+                    time.sleep(1)
+                    continue    
                 
         # GAME
         if snapshot_state == "ingame":
