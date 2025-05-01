@@ -122,13 +122,43 @@ def ready_to_walk():
 # THREAD
 # THREAD
 def get_state():
-    global current_state, sleeping_time
+    global current_state, sleeping_time, notify_user, main_loop
 
     while True:
         temp_state = state()
         if temp_state is not None:
             with state_lock:
                 current_state = temp_state
+                
+                # GAME RESULT
+                if current_state == "ingameresult":
+                    if user_type == "shooter":
+                        gp = get_gp()
+                        exp = get_exp()
+                        kills = get_kill()
+
+                        message = (
+                            f"💰 GP       =  {gp}\n"
+                            f"📈 EXP     =  {exp}\n"
+                            f"🔫 KILLS  =  {kills}"
+                        )
+                        
+                        sendMessage(message)
+                        
+                        notify_user = False
+                    
+                    time.sleep(5) # make all client to prepare for the next phase
+                
+                # GAME OUTSIDE  
+                if snapshot_state == "inoutside":
+                    sendMessage(f"🚨 ALERT: Client {client_id} is outside the room!")
+                    time.sleep(1)
+                    saveScreenshot("inoutside")
+                    time.sleep(1)
+                    sendScreenshot()
+                    time.sleep(1)
+                    main_loop = False
+            
         time.sleep(sleeping_time)
         
 # ----------------------
@@ -173,7 +203,7 @@ while main_loop:
                 elapsed_time = time.time() - lobby_enter_time
                 
                 if elapsed_time > 120 and not notify_user:
-                    sendMessage(f"⏱️ Client {client_id} has been in the lobby for over 60 seconds. Screenshot saved for review.")
+                    sendMessage(f"⏱️ Client {client_id} has been in the lobby for over 120 seconds. Screenshot saved for review.")
                     saveScreenshot("inlobby/error")
                     time.sleep(1)
                     sendScreenshot()
@@ -187,7 +217,7 @@ while main_loop:
                 # If user late to join
                 if user_room_status == "join game":
                     click_ready_button()
-                    time.sleep(5)
+                    time.sleep(1)
 
                     click_okay_button()
                     time.sleep(1)
@@ -259,37 +289,7 @@ while main_loop:
                 time.sleep(1)
 
         # GAME RESULT
-        if snapshot_state == "ingameresult":
-            if chance_to_send == 3:
-              saveScreenshot("ingameresult")
-              time.sleep(1)
-            
-            if user_type == "shooter":
-              gp = get_gp()
-              exp = get_exp()
-              kills = get_kill()
-
-              message = (
-                  f"💰 GP       =  {gp}\n"
-                  f"📈 EXP     =  {exp}\n"
-                  f"🔫 KILLS  =  {kills}"
-              )
-              
-              sendMessage(message)
-            
-            notify_user = False
-              
-            time.sleep(10) # make all client to prepare for the next phase
-          
         # GAME OUTSIDE  
-        if snapshot_state == "inoutside":
-            sendMessage(f"🚨 ALERT: Client {client_id} is outside the room!")
-            time.sleep(1)
-            saveScreenshot("inoutside")
-            time.sleep(1)
-            sendScreenshot()
-            time.sleep(1)
-            main_loop = False
 
         previous_state = snapshot_state  # Update after processing
 
