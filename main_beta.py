@@ -285,6 +285,9 @@ while main_loop:
 
                 if user_type == "bot":
                     press_key_for_seconds('a', 2)
+                    
+                if user_type == "earner":
+                    press_key_for_seconds('s', 2)
 
                 time.sleep(1)
 
