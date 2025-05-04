@@ -1,7 +1,7 @@
 import ctypes
 import time
 from ctypes import wintypes  # ✅ Import this!
-
+from app import get_object_location
 # Constants
 INPUT_MOUSE = 0
 MOUSEEVENTF_MOVE = 0x0001
@@ -39,5 +39,8 @@ def move_mouse_to(target_x, target_y, steps=20, delay_ms=5):
         time.sleep(delay_ms / 1000.0)
 
 # Example usage
-target_x, target_y = 932, 521
-move_mouse_to(target_x, target_y)
+object_result = get_object_location()
+
+if object_result:
+    target_x, target_y = get_object_location()
+    move_mouse_to(target_x, target_y)
