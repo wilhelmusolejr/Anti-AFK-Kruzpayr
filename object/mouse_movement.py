@@ -1,12 +1,15 @@
 import ctypes
 import time
-from ctypes import wintypes  # ✅ Import this!
-from app import get_object_location
+import os
+
+from ctypes import wintypes
+from app import get_object_location, get_screenshot
+
 # Constants
 INPUT_MOUSE = 0
 MOUSEEVENTF_MOVE = 0x0001
 
-# Define required structures
+# Structures
 class MOUSEINPUT(ctypes.Structure):
     _fields_ = [("dx", ctypes.c_long),
                 ("dy", ctypes.c_long),
@@ -25,22 +28,38 @@ def send_mouse_move(dx, dy):
     inp = INPUT(INPUT_MOUSE, mi)
     ctypes.windll.user32.SendInput(1, ctypes.pointer(inp), ctypes.sizeof(inp))
 
-def get_mouse_position():
-    pt = wintypes.POINT()  # ✅ Fix here
-    ctypes.windll.user32.GetCursorPos(ctypes.byref(pt))
-    return pt.x, pt.y
-
-def move_mouse_to(target_x, target_y, steps=20, delay_ms=5):
-    current_x, current_y = get_mouse_position()
-    dx = (target_x - current_x) / steps
-    dy = (target_y - current_y) / steps
+def move_mouse_by_delta(dx, dy, steps=20, delay_ms=5):
+    step_dx = dx / steps
+    step_dy = dy / steps
     for _ in range(steps):
-        send_mouse_move(int(dx), int(dy))
+        send_mouse_move(int(step_dx), int(step_dy))
         time.sleep(delay_ms / 1000.0)
-
 # Example usage
 object_result = get_object_location()
 
 if object_result:
-    target_x, target_y = get_object_location()
-    move_mouse_to(target_x, target_y)
+    cx, cy = object_result["center"]
+
+    # 🧠 Get screen size
+    screen_width = ctypes.windll.user32.GetSystemMetrics(0)
+    screen_height = ctypes.windll.user32.GetSystemMetrics(1)
+    screen_center_x = screen_width // 2
+    screen_center_y = screen_height // 2
+
+    # 🎯 Calculate delta from center
+    dx = cx - screen_center_x
+    dy = cy - screen_center_y
+
+    # 💡 Move mouse by delta
+    move_mouse_by_delta(dx, dy)
+
+    # Save raw screenshot
+    # Take screenshot and convert to OpenCV format
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    pil_image = get_screenshot()
+
+    # Save raw screenshot
+    os.makedirs("screenshots", exist_ok=True)
+    raw_path = f"screenshots/screenshot_{timestamp}output.png"
+    pil_image.save(raw_path)
+    
